@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="cn.ming:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="ming.war">
+      <element id="artifact" artifact-name="cn.ming:war exploded" />
+    </root>
+  </artifact>
+</component>

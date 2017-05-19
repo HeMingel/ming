@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        				   http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        				   http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-3.2.xsd
+                           http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+    <!-- 配置SpringMVC -->
+    <!-- 1.开启SpringMVC注解模式 -->
+    <!-- 简化配置：
+        (1)自动注册DefaultAnootationHandlerMapping,AnotationMethodHandlerAdapter
+        (2)提供一些列：数据绑定，数字和日期的format @NumberFormat, @DateTimeFormat, xml,json默认读写支持
+    -->
+    <mvc:annotation-driven/>
+    <!-- 2.静态资源默认servlet配置
+        (1)加入对静态资源的处理：js,gif,png
+        (2)允许使用"/"做整体映射
+     -->
+    <mvc:resources mapping="/css/**" location="/static/css/" />
+    <mvc:resources mapping="/images/**" location="/static/images/" />
+    <mvc:resources mapping="/view/**" location="/static/view/" />
+    <mvc:resources mapping="/video/**" location="/static/video/" />
+    <mvc:resources mapping="/fonts/**" location="/static/fonts/"/>
+    <mvc:resources mapping="/js/**" location="/static/js/"/>
+    <mvc:default-servlet-handler/>
+
+<!--&lt;!&ndash;配置实现首页重定向 &ndash;&gt;
+    <mvc:view-controller path="/"
+                         view-name="redirect:/ming/firstPage" />
+    <mvc:view-controller path="/ming"
+                         view-name="redirect:/ming/firstPage" />-->
+ <!--自定义访问拦截 -->
+  <!--<mvc:interceptors>-->
+        <!--<mvc:interceptor>-->
+            <!--<mvc:mapping path="/**/**"/>-->
+            <!--<bean class="cn.ming.intercepter.LoginHandlerInterceptor"/>-->
+        <!--</mvc:interceptor>-->
+    <!--</mvc:interceptors>-->
+    <!-- 定义mvc的拦截器 -->
+    <mvc:interceptors>
+    <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
+    <mvc:interceptor>
+        <mvc:mapping path="/**/**" />
+        <mvc:exclude-mapping path="/ming/firstPage"/>
+        <mvc:exclude-mapping path="/ming/loginPage"/>
+        <mvc:exclude-mapping path="/ming/login"/>
+        <mvc:exclude-mapping path="/ming/home"/>
+        <mvc:exclude-mapping path="/static/**"/>
+        <bean class="cn.ming.intercepter.LoginHandlerInterceptor"/>
+    </mvc:interceptor>
+</mvc:interceptors>
+
+
+    <!-- 3.配置jsp 显示ViewResolver -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+
+    <!-- 4.扫描web相关的bean -->
+    <context:component-scan base-package="cn.ming.mvc">
+        <!-- 制定扫包规则 ,只扫描使用@Controller注解的JAVA类 -->
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--下面设置的是上传文件的最大大小-->
+        <property name="maxUploadSize" value="10000000"/>
+    </bean>
+
+</beans>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace是指明Mybatis扫描的目录，mapper是我们的Dao层的映射目录 -->
+<mapper namespace="cn.ming.dao.LoginDao">
+    <!--查找-->
+    <select id="getPwdByName" resultType="String" parameterType="String">
+       select password from mingel_user where username =#{username};
+    </select>
+
+    <!--查找-->
+    <select id="getExistByName" resultType="int" parameterType="String">
+        select count(id) from mingel_user where username =#{username};
+    </select>
+
+</mapper>
